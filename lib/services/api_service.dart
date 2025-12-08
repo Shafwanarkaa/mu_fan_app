@@ -705,6 +705,8 @@ class ApiService {
         final data = json.decode(response.body);
         final articles = data['articles'] as List;
 
+        print('📰 Total articles from API: ${articles.length}');
+
         // Filter: only articles with images and MU-related
         final filteredArticles =
             articles.where((article) {
@@ -722,8 +724,17 @@ class ApiService {
                   title.contains('man utd') ||
                   description.contains('manchester united');
 
+              if (!hasImage) {
+                print('❌ No image: ${article['title']}');
+              }
+              if (!isMURelated) {
+                print('❌ Not MU: ${article['title']}');
+              }
+
               return hasImage && isMURelated;
             }).toList();
+
+        print('✅ Filtered articles with image & MU: ${filteredArticles.length}');
 
         return filteredArticles.map((article) {
           return {
